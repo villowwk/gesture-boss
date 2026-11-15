@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Gesture Boss</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+
+    <!-- ================================= -->
+    <!-- TUTORIAL -->
+    <!-- ================================= -->
+
+    <div
+        id="tutorial-overlay"
+        class="tutorial-overlay"
+    >
+
+        <div class="tutorial-window">
+
+            <button
+                id="tutorial-skip"
+                class="tutorial-skip"
+            >
+                ×
+            </button>
+
+
+            <!-- STEP 1 -->
+
+            <div class="tutorial-page active">
+
+                <img
+                    class="tutorial-boss"
+                    src="assets/boss/boss.png"
+                    alt="Boss"
+                >
+
+                <h2>
+                    ПОБЕДИ БОССА
+                </h2>
+
+                <p>
+                    Выполняй комбинации жестов,
+                    чтобы наносить урон мини-боссу.
+                </p>
+
+                <div class="tutorial-number">
+                    1 / 3
+                </div>
+
+            </div>
+
+
+            <!-- STEP 2 -->
+
+            <div class="tutorial-page">
+
+                <div class="tutorial-gestures">
+
+                    <img
+                        src="assets/gestures/fire-hand.png"
+                        alt="Fire"
+                    >
+
+                    <img
+                        src="assets/gestures/water-hand.png"
+                        alt="Water"
+                    >
+
+                    <img
+                        src="assets/gestures/wind-hand.png"
+                        alt="Wind"
+                    >
+
+                </div>
+
+                <h2>
+                    ПОВТОРЯЙ ЖЕСТЫ
+                </h2>
+
+                <p>
+                    Следи за последовательностью
+                    и показывай жесты руками
+                    в нужном порядке.
+                </p>
+
+                <div class="tutorial-number">
+                    2 / 3
+                </div>
+
+            </div>
+
+
+            <!-- STEP 3 -->
+
+            <div class="tutorial-page">
+
+                <div class="tutorial-neutral">
+                    ✋
+                </div>
+
+                <h2>
+                    НЕ ЗАБУДЬ ПРО NEUTRAL
+                </h2>
+
+                <p>
+                    После каждого жеста верни руку
+                    в нейтральное положение.
+                </p>
+
+                <p class="tutorial-example">
+                    FIRE → NEUTRAL → WATER
+                </p>
+
+                <p class="tutorial-note">
+                    Ошибка сбрасывает COMBO до нуля,
+                    но текущий элемент можно попробовать снова.
+                </p>
+
+                <div class="tutorial-number">
+                    3 / 3
+                </div>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="tutorial-controls">
+
+                <button
+                    id="tutorial-back"
+                    class="tutorial-button tutorial-back"
+                >
+                    ← BACK
+                </button>
+
+                <button
+                    id="tutorial-next"
+                    class="tutorial-button"
+                >
+                    NEXT →
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================= -->
+    <!-- TIME OUT -->
+    <!-- ================================= -->
+
+    <div
+        id="timeout-overlay"
+        class="result-overlay hidden"
+    >
+
+        <div class="result-window">
+
+            <button
+                id="timeout-close"
+                class="result-close"
+            >
+                ×
+            </button>
+
+            <div class="result-icon">
+                ⏱
+            </div>
+
+            <h2>
+                ВРЕМЯ ВЫШЛО
+            </h2>
+
+            <p>
+                Ты не успел победить босса.
+            </p>
+
+            <p
+                id="timeout-result"
+                class="result-info"
+            >
+                У босса осталось 100 HP.
+            </p>
+
+            <button
+                id="retry-button"
+                class="result-button"
+            >
+                TRY AGAIN
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================= -->
+    <!-- VICTORY -->
+    <!-- ================================= -->
+
+    <div
+        id="victory-overlay"
+        class="result-overlay hidden"
+    >
+
+        <div class="result-window">
+
+            <button
+                id="victory-close"
+                class="result-close"
+            >
+                ×
+            </button>
+
+            <img
+                class="victory-boss"
+                src="assets/boss/boss.png"
+                alt="Boss"
+            >
+
+            <h2>
+                ПОБЕДА!
+            </h2>
+
+            <p>
+                Ты победил босса!
+            </p>
+
+            <p
+                id="victory-result"
+                class="result-info"
+            >
+                Отличная работа.
+            </p>
+
+            <button
+                id="victory-retry"
+                class="result-button"
+            >
+                PLAY AGAIN
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================= -->
+    <!-- SITE -->
+    <!-- ================================= -->
+
+    <div class="site">
+
+
+        <header class="site-header">
+
+            <h1>
+                GESTURE BOSS
+            </h1>
+
+            <p>
+                Повторяй жесты и атакуй босса
+            </p>
+
+        </header>
+
+
+        <main class="page-layout">
+
+
+            <!-- ================================= -->
+            <!-- LEFT PANEL -->
+            <!-- ================================= -->
+
+            <aside class="gesture-panel">
+
+                <h2>
+                    ЖЕСТЫ
+                </h2>
+
+
+                <div class="gesture-card">
+
+                    <div class="gesture-icon">
+
+                        <img
+                            src="assets/gestures/fire-hand.png"
+                            alt="Fire gesture"
+                        >
+
+                    </div>
+
+                    <h3>
+                        Fire
+                    </h3>
+
+                    <p>
+                        Огненный жест
+                    </p>
+
+                </div>
+
+
+                <div class="gesture-card">
+
+                    <div class="gesture-icon">
+
+                        <img
+                            src="assets/gestures/water-hand.png"
+                            alt="Water gesture"
+                        >
+
+                    </div>
+
+                    <h3>
+                        Water
+                    </h3>
+
+                    <p>
+                        Водный жест
+                    </p>
+
+                </div>
+
+            </aside>
+
+
+            <!-- ================================= -->
+            <!-- CENTER -->
+            <!-- ================================= -->
+
+            <section class="center-zone">
+
+
+                <section class="game-window">
+
+
+                    <!-- TIMER -->
+
+                    <div class="timer-box">
+
+                        <span class="timer-label">
+                            TIME
+                        </span>
+
+                        <span id="timer">
+                            45
+                        </span>
+
+                    </div>
+
+
+                    <!-- ================================= -->
+                    <!-- BATTLE -->
+                    <!-- ================================= -->
+
+                    <div class="battle-area">
+
+
+                        <!-- PERFECT / MISS -->
+
+                        <img
+                            id="judgement-image"
+                            class="judgement-image"
+                            src=""
+                            alt=""
+                        >
+
+
+                        <!-- CAMERA -->
+
+                        <div class="camera-column">
+
+                            <div class="small-title">
+                                CAMERA
+                            </div>
+
+                            <div
+                                id="webcam-container"
+                                class="camera"
+                            >
+
+                                <p id="camera-placeholder">
+                                    Камера выключена
+                                </p>
+
+                            </div>
+
+                            <div
+                                id="gesture-status"
+                                class="gesture-status"
+                            >
+                                Нажми START
+                            </div>
+
+                        </div>
+
+
+                        <!-- BOSS -->
+
+                        <div class="boss-area">
+
+                            <img
+                                id="boss"
+                                class="boss"
+                                src="assets/boss/boss.png"
+                                alt="Boss"
+                            >
+
+                            <div class="boss-name">
+                                MINI BOSS
+                            </div>
+
+                            <div class="health-bar">
+
+                                <div
+                                    id="boss-health"
+                                    class="health"
+                                ></div>
+
+                            </div>
+
+                            <div id="hp-text">
+                                100 / 100 HP
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================= -->
+                    <!-- RHYTHM -->
+                    <!-- ================================= -->
+
+                    <div class="rhythm-area">
+
+                        <div class="rhythm-heading">
+
+                            <span>
+                                ПОВТОРИ
+                            </span>
+
+                            <span id="combo-counter">
+                                COMBO 0
+                            </span>
+
+                        </div>
+
+                        <div
+                            id="rhythm-line"
+                            class="rhythm-line"
+                        >
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- TEXT -->
+
+                <section class="dialogue-box">
+
+                    <p id="battle-text">
+                        Нажми START, чтобы начать.
+                    </p>
+
+                </section>
+
+
+                <!-- BUTTONS -->
+
+                <div class="buttons">
+
+                    <button
+                        id="start-button"
+                        class="main-button"
+                    >
+                        START
+                    </button>
+
+                    <button
+                        id="reset-button"
+                        class="secondary-button"
+                    >
+                        RESET
+                    </button>
+
+                    <button
+                        id="tutorial-button"
+                        class="secondary-button"
+                    >
+                        HOW TO PLAY
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================================= -->
+            <!-- RIGHT PANEL -->
+            <!-- ================================= -->
+
+            <aside class="gesture-panel">
+
+                <h2>
+                    ЖЕСТЫ
+                </h2>
+
+
+                <div class="gesture-card">
+
+                    <div class="gesture-icon">
+
+                        <img
+                            src="assets/gestures/wind-hand.png"
+                            alt="Wind gesture"
+                        >
+
+                    </div>
+
+                    <h3>
+                        Wind
+                    </h3>
+
+                    <p>
+                        Воздушный жест
+                    </p>
+
+                </div>
+
+
+                <div class="gesture-card">
+
+                    <div class="neutral-icon">
+                        ✋
+                    </div>
+
+                    <h3>
+                        Neutral
+                    </h3>
+
+                    <p>
+                        Убери руку между жестами
+                    </p>
+
+                </div>
+
+            </aside>
+
+
+        </main>
+
+    </div>
+
+
+    <!-- ================================= -->
+    <!-- LIBRARIES -->
+    <!-- ================================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.4/dist/teachablemachine-image.min.js"></script>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

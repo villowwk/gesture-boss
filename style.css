@@ -1,0 +1,1029 @@
+/* ========================================= */
+/* GENERAL */
+/* ========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    background: #292929;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: #171717;
+}
+
+
+.site {
+    width: min(1400px, 96%);
+
+    margin: 20px auto;
+
+    background: #f7f7f7;
+
+    min-height: calc(100vh - 40px);
+}
+
+
+/* ========================================= */
+/* HEADER */
+/* ========================================= */
+
+.site-header {
+    text-align: center;
+
+    padding: 20px 20px 10px;
+}
+
+
+.site-header h1 {
+    margin: 0;
+
+    font-size: 42px;
+
+    letter-spacing: 5px;
+}
+
+
+.site-header p {
+    margin: 8px 0 0;
+
+    color: #666;
+}
+
+
+/* ========================================= */
+/* PAGE */
+/* ========================================= */
+
+.page-layout {
+    display: grid;
+
+    grid-template-columns:
+        220px
+        minmax(500px, 1fr)
+        220px;
+
+    gap: 25px;
+
+    padding: 20px 30px 35px;
+}
+
+
+/* ========================================= */
+/* SIDE PANELS */
+/* ========================================= */
+
+.gesture-panel {
+    border: 2px solid #555;
+
+    padding: 20px 15px;
+
+    min-height: 700px;
+}
+
+
+.gesture-panel h2 {
+    text-align: center;
+
+    margin-top: 0;
+
+    letter-spacing: 3px;
+}
+
+
+.gesture-card {
+    margin-top: 45px;
+
+    text-align: center;
+}
+
+
+.gesture-icon {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+
+.gesture-icon img {
+    width: 150px;
+
+    height: 150px;
+
+    object-fit: contain;
+}
+
+
+.neutral-icon {
+    font-size: 75px;
+}
+
+
+.gesture-card h3 {
+    margin: 10px 0 5px;
+
+    font-size: 20px;
+}
+
+
+.gesture-card p {
+    margin: 5px 0;
+
+    color: #555;
+
+    font-size: 14px;
+}
+
+
+/* ========================================= */
+/* CENTER */
+/* ========================================= */
+
+.center-zone {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+
+/* ========================================= */
+/* GAME */
+/* ========================================= */
+
+.game-window {
+    border: 2px solid #555;
+
+    padding: 20px;
+
+    background: white;
+}
+
+
+/* ========================================= */
+/* TIMER */
+/* ========================================= */
+
+.timer-box {
+    width: 220px;
+
+    height: 48px;
+
+    margin: 0 auto 15px;
+
+    border: 2px solid #555;
+
+    background: white;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 15px;
+
+    font-size: 22px;
+
+    font-weight: bold;
+}
+
+
+.timer-label {
+    font-size: 12px;
+
+    color: #777;
+
+    letter-spacing: 2px;
+}
+
+
+/* ========================================= */
+/* BATTLE */
+/* ========================================= */
+
+.battle-area {
+    position: relative;
+
+    min-height: 410px;
+
+    display: grid;
+
+    grid-template-columns:
+        200px
+        1fr;
+
+    align-items: center;
+
+    gap: 25px;
+
+    padding: 25px;
+
+    background-image:
+        url("assets/backgrounds/battle-bg.png");
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-repeat: no-repeat;
+
+    overflow: hidden;
+}
+
+
+/* ========================================= */
+/* PERFECT / MISS */
+/* ========================================= */
+
+.judgement-image {
+    position: absolute;
+
+    left: 50%;
+    top: 18%;
+
+    transform:
+        translate(-50%, -50%)
+        scale(0.8);
+
+    width: 230px;
+
+    max-width: 40%;
+
+    height: auto;
+
+    object-fit: contain;
+
+    z-index: 20;
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    transition:
+        opacity 0.1s,
+        transform 0.1s;
+}
+
+
+.judgement-image.show {
+    opacity: 1;
+
+    transform:
+        translate(-50%, -50%)
+        scale(1);
+}
+
+
+/* ========================================= */
+/* CAMERA */
+/* ========================================= */
+
+.camera-column {
+    align-self: center;
+}
+
+
+.small-title {
+    display: inline-block;
+
+    margin-bottom: 5px;
+
+    padding: 3px 7px;
+
+    background: rgba(255, 255, 255, 0.9);
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+}
+
+
+.camera {
+    width: 200px;
+
+    height: 200px;
+
+    border: 2px solid #333;
+
+    background: #111;
+
+    color: white;
+
+    overflow: hidden;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+}
+
+
+.camera canvas {
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+#camera-placeholder {
+    padding: 15px;
+
+    font-size: 13px;
+
+    color: #999;
+}
+
+
+.gesture-status {
+    width: 200px;
+
+    min-height: 48px;
+
+    border: 2px solid #333;
+
+    border-top: none;
+
+    background: white;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+    padding: 7px;
+
+    font-size: 13px;
+
+    font-weight: bold;
+}
+
+
+/* ========================================= */
+/* BOSS */
+/* ========================================= */
+
+.boss-area {
+    text-align: center;
+
+    min-width: 0;
+}
+
+
+.boss {
+    width: 420px;
+
+    height: 320px;
+
+    max-width: 95%;
+
+    object-fit: contain;
+
+    user-select: none;
+
+    transition:
+        transform 0.12s,
+        opacity 0.2s;
+}
+
+
+.boss.hit {
+    transform:
+        scale(0.94)
+        rotate(2deg);
+}
+
+
+.boss.dead {
+    opacity: 0.35;
+
+    transform: rotate(12deg);
+}
+
+
+.boss-name {
+    display: inline-block;
+
+    margin-bottom: 10px;
+
+    padding: 4px 10px;
+
+    background: rgba(255, 255, 255, 0.9);
+
+    font-weight: bold;
+
+    letter-spacing: 3px;
+}
+
+
+/* ========================================= */
+/* HP */
+/* ========================================= */
+
+.health-bar {
+    width: min(400px, 90%);
+
+    height: 28px;
+
+    border: 2px solid #333;
+
+    margin: 0 auto 7px;
+
+    background: #ddd;
+
+    overflow: hidden;
+}
+
+
+.health {
+    width: 100%;
+
+    height: 100%;
+
+    background: #333;
+
+    transition: width 0.3s ease;
+}
+
+
+#hp-text {
+    display: inline-block;
+
+    padding: 3px 8px;
+
+    background: rgba(255, 255, 255, 0.9);
+
+    font-size: 13px;
+
+    font-weight: bold;
+}
+
+
+/* ========================================= */
+/* RHYTHM */
+/* ========================================= */
+
+.rhythm-area {
+    border: 2px solid #555;
+
+    padding: 14px 20px 18px;
+
+    min-height: 125px;
+
+    margin-top: 15px;
+}
+
+
+.rhythm-heading {
+    display: flex;
+
+    justify-content: space-between;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 15px;
+}
+
+
+.rhythm-line {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 20px;
+
+    min-height: 70px;
+}
+
+
+.rhythm-symbol {
+    width: 75px;
+
+    height: 75px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    transition:
+        transform 0.15s,
+        opacity 0.15s;
+}
+
+
+.rhythm-symbol img {
+    width: 65px;
+
+    height: 65px;
+
+    object-fit: contain;
+}
+
+
+.rhythm-symbol.done {
+    opacity: 0.2;
+
+    transform: scale(0.85);
+}
+
+
+.rhythm-symbol.current {
+    opacity: 1;
+
+    transform: scale(1.25);
+}
+
+
+.rhythm-symbol.future {
+    opacity: 0.75;
+}
+
+
+/* ========================================= */
+/* TEXT */
+/* ========================================= */
+
+.dialogue-box {
+    min-height: 90px;
+
+    border: 2px solid #555;
+
+    background: white;
+
+    padding: 18px 22px;
+
+    font-size: 18px;
+
+    display: flex;
+
+    align-items: center;
+}
+
+
+.dialogue-box p {
+    margin: 0;
+}
+
+
+/* ========================================= */
+/* BUTTONS */
+/* ========================================= */
+
+.buttons {
+    display: flex;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+}
+
+
+button {
+    border: 2px solid #222;
+
+    padding: 12px 24px;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+.main-button {
+    background: #222;
+
+    color: white;
+}
+
+
+.secondary-button {
+    background: white;
+
+    color: #222;
+}
+
+
+button:hover {
+    opacity: 0.78;
+}
+
+
+/* ========================================= */
+/* TUTORIAL */
+/* ========================================= */
+
+.tutorial-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    width: 100vw;
+
+    height: 100vh;
+
+    background: rgba(0, 0, 0, 0.72);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 99999;
+
+    padding: 20px;
+}
+
+
+.tutorial-overlay.hidden {
+    display: none;
+}
+
+
+.tutorial-window {
+    position: relative;
+
+    width: 520px;
+
+    max-width: 90vw;
+
+    min-height: 440px;
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    background: white;
+
+    border: 3px solid #222;
+
+    padding: 45px 45px 35px;
+
+    text-align: center;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.tutorial-page {
+    display: none;
+}
+
+
+.tutorial-page.active {
+    display: block;
+}
+
+
+.tutorial-boss {
+    width: 180px;
+
+    height: 160px;
+
+    object-fit: contain;
+}
+
+
+.tutorial-neutral {
+    font-size: 85px;
+
+    margin: 15px 0;
+}
+
+
+.tutorial-gestures {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin: 25px 0;
+}
+
+
+.tutorial-gestures img {
+    width: 100px;
+
+    height: 100px;
+
+    object-fit: contain;
+}
+
+
+.tutorial-window h2 {
+    margin: 15px 0;
+
+    font-size: 28px;
+}
+
+
+.tutorial-window p {
+    max-width: 400px;
+
+    margin: 0 auto;
+
+    font-size: 17px;
+
+    line-height: 1.6;
+}
+
+
+.tutorial-number {
+    margin-top: 30px;
+
+    color: #777;
+
+    font-size: 13px;
+
+    letter-spacing: 2px;
+}
+
+
+.tutorial-example {
+    margin-top: 25px !important;
+
+    font-weight: bold;
+}
+
+
+.tutorial-note {
+    margin-top: 15px !important;
+
+    font-size: 14px !important;
+
+    color: #777;
+}
+
+
+.tutorial-controls {
+    margin-top: auto;
+
+    padding-top: 35px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+
+.tutorial-button {
+    min-width: 120px;
+
+    background: #222;
+
+    color: white;
+}
+
+
+.tutorial-back {
+    background: white;
+
+    color: #222;
+}
+
+
+.tutorial-skip {
+    position: absolute;
+
+    top: 10px;
+    right: 12px;
+
+    width: 36px;
+    height: 36px;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 28px;
+}
+
+
+/* ========================================= */
+/* RESULT WINDOWS */
+/* ========================================= */
+
+.result-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    background: rgba(0, 0, 0, 0.72);
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 100000;
+
+    padding: 20px;
+}
+
+
+.result-overlay.hidden {
+    display: none;
+}
+
+
+.result-window {
+    position: relative;
+
+    width: 460px;
+
+    max-width: 90vw;
+
+    min-height: 350px;
+
+    background: white;
+
+    border: 3px solid #222;
+
+    padding: 45px 40px 35px;
+
+    text-align: center;
+}
+
+
+.result-icon {
+    font-size: 70px;
+
+    margin-bottom: 15px;
+}
+
+
+.victory-boss {
+    width: 180px;
+
+    height: 150px;
+
+    object-fit: contain;
+}
+
+
+.result-window h2 {
+    margin: 10px 0 20px;
+
+    font-size: 30px;
+
+    letter-spacing: 2px;
+}
+
+
+.result-window p {
+    margin: 10px auto;
+
+    font-size: 17px;
+
+    line-height: 1.5;
+}
+
+
+.result-info {
+    margin-top: 25px !important;
+
+    font-weight: bold;
+}
+
+
+.result-button {
+    margin-top: 30px;
+
+    min-width: 170px;
+
+    padding: 14px 25px;
+
+    background: #222;
+
+    color: white;
+
+    border: 2px solid #222;
+
+    font-size: 15px;
+
+    font-weight: bold;
+}
+
+
+.result-close {
+    position: absolute;
+
+    top: 10px;
+    right: 12px;
+
+    width: 36px;
+    height: 36px;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 28px;
+}
+
+
+/* ========================================= */
+/* RESPONSIVE */
+/* ========================================= */
+
+@media (max-width: 1000px) {
+
+    .page-layout {
+        grid-template-columns: 1fr;
+    }
+
+
+    .gesture-panel {
+        display: none;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .battle-area {
+        grid-template-columns: 1fr;
+    }
+
+
+    .camera,
+    .gesture-status {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+
+    .boss {
+        width: 280px;
+
+        height: 250px;
+    }
+
+
+    .rhythm-line {
+        gap: 6px;
+    }
+
+
+    .rhythm-symbol {
+        width: 52px;
+
+        height: 52px;
+    }
+
+
+    .rhythm-symbol img {
+        width: 45px;
+
+        height: 45px;
+    }
+
+}
