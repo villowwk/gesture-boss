@@ -2,8 +2,7 @@
 // MODEL
 // ============================================
 
-const MODEL_URL =
-    "./model/";
+const MODEL_URL = "./model/";
 
 
 // ============================================
@@ -11,58 +10,55 @@ const MODEL_URL =
 // ============================================
 
 const BOSS_NORMAL_IMAGE =
-    "assets/boss/boss.png";
+    "assets/boss/boss.PNG";
 
 const BOSS_HIT_IMAGE =
-    "assets/boss/boss-hit.png";
+    "assets/boss/boss-hit.PNG";
 
 const PERFECT_IMAGE =
-    "assets/feedback/perfect.png";
+    "assets/feedback/perfect.PNG";
 
 const MISS_IMAGE =
-    "assets/feedback/miss.png";
+    "assets/feedback/miss.PNG";
 
 
 // ============================================
 // GESTURES
 // ============================================
 
-const NEUTRAL_CLASS =
-    "Neutral";
+const NEUTRAL_CLASS = "Neutral";
 
 
 const GESTURES = [
-
     {
         className: "Fire",
 
         colorIcon:
-            "assets/elements/fire-color.png",
+            "assets/elements/fire-color.PNG",
 
         whiteIcon:
-            "assets/elements/fire-white.png"
+            "assets/elements/fire-white.PNG"
     },
 
     {
         className: "Water",
 
         colorIcon:
-            "assets/elements/water-color.png",
+            "assets/elements/water-color.PNG",
 
         whiteIcon:
-            "assets/elements/water-white.png"
+            "assets/elements/water-white.PNG"
     },
 
     {
         className: "Wind",
 
         colorIcon:
-            "assets/elements/wind-color.png",
+            "assets/elements/wind-color.PNG",
 
         whiteIcon:
-            "assets/elements/wind-white.png"
+            "assets/elements/wind-white.PNG"
     }
-
 ];
 
 
@@ -70,74 +66,50 @@ const GESTURES = [
 // GAME SETTINGS
 // ============================================
 
-const MAX_BOSS_HP =
-    100;
+const MAX_BOSS_HP = 100;
 
-const ROW_DAMAGE =
-    20;
+const ROW_DAMAGE = 20;
 
-const SEQUENCE_LENGTH =
-    5;
+const SEQUENCE_LENGTH = 5;
 
-const ROUND_TIME =
-    45;
+const ROUND_TIME = 45;
 
-const CONFIDENCE_THRESHOLD =
-    0.85;
+const CONFIDENCE_THRESHOLD = 0.85;
 
-const REQUIRED_STABLE_FRAMES =
-    4;
+const REQUIRED_STABLE_FRAMES = 4;
 
 
 // ============================================
 // VARIABLES
 // ============================================
 
-let model =
-    null;
+let model = null;
 
-let webcam =
-    null;
+let webcam = null;
 
-let gameStarted =
-    false;
+let gameStarted = false;
 
-let gameOver =
-    false;
+let gameOver = false;
 
-let bossHP =
-    MAX_BOSS_HP;
+let bossHP = MAX_BOSS_HP;
 
-let currentSequence =
-    [];
+let currentSequence = [];
 
-let currentGestureIndex =
-    0;
+let currentGestureIndex = 0;
 
+let comboCount = 0;
 
-// Теперь combo = правильные отдельные жесты подряд.
+let timeLeft = ROUND_TIME;
 
-let comboCount =
-    0;
+let timerInterval = null;
 
+let waitingForNeutral = false;
 
-let timeLeft =
-    ROUND_TIME;
+let lastDetectedClass = null;
 
-let timerInterval =
-    null;
+let stableFrames = 0;
 
-let waitingForNeutral =
-    false;
-
-let lastDetectedClass =
-    null;
-
-let stableFrames =
-    0;
-
-let judgementTimer =
-    null;
+let judgementTimer = null;
 
 
 // ============================================
@@ -158,7 +130,6 @@ const tutorialButton =
     document.getElementById(
         "tutorial-button"
     );
-
 
 const webcamContainer =
     document.getElementById(
@@ -212,7 +183,7 @@ const judgementImage =
 
 
 // ============================================
-// TIMEOUT
+// TIME OUT ELEMENTS
 // ============================================
 
 const timeoutOverlay =
@@ -237,7 +208,7 @@ const timeoutResult =
 
 
 // ============================================
-// VICTORY
+// VICTORY ELEMENTS
 // ============================================
 
 const victoryOverlay =
@@ -272,23 +243,24 @@ async function startGame() {
     }
 
 
-    startButton.disabled =
-        true;
+    startButton.disabled = true;
 
 
     battleText.textContent =
         "Загружаю модель...";
 
 
+    // ========================================
+    // LOAD MODEL
+    // ========================================
+
     try {
 
         const modelURL =
-            MODEL_URL
-            + "model.json";
+            MODEL_URL + "model.json";
 
         const metadataURL =
-            MODEL_URL
-            + "metadata.json";
+            MODEL_URL + "metadata.json";
 
 
         model =
@@ -312,12 +284,19 @@ async function startGame() {
             + error.message;
 
 
-        startButton.disabled =
-            false;
+        startButton.disabled = false;
 
 
         return;
     }
+
+
+    // ========================================
+    // CAMERA
+    // ========================================
+
+    battleText.textContent =
+        "Включаю камеру...";
 
 
     try {
@@ -338,8 +317,7 @@ async function startGame() {
         await webcam.play();
 
 
-        webcamContainer.innerHTML =
-            "";
+        webcamContainer.innerHTML = "";
 
 
         webcamContainer.appendChild(
@@ -361,16 +339,18 @@ async function startGame() {
             + error.message;
 
 
-        startButton.disabled =
-            false;
+        startButton.disabled = false;
 
 
         return;
     }
 
 
-    gameStarted =
-        true;
+    // ========================================
+    // START
+    // ========================================
+
+    gameStarted = true;
 
 
     resetGame();
@@ -383,7 +363,7 @@ async function startGame() {
 
 
 // ============================================
-// LOOP
+// GAME LOOP
 // ============================================
 
 async function loop() {
@@ -418,7 +398,6 @@ async function predict() {
         ||
         gameOver
     ) {
-
         return;
     }
 
@@ -461,6 +440,10 @@ async function predict() {
         bestPrediction.probability;
 
 
+    // ========================================
+    // LOW CONFIDENCE
+    // ========================================
+
     if (
         probability
         <
@@ -471,12 +454,9 @@ async function predict() {
             "Не распознано";
 
 
-        stableFrames =
-            0;
+        stableFrames = 0;
 
-
-        lastDetectedClass =
-            null;
+        lastDetectedClass = null;
 
 
         return;
@@ -501,20 +481,16 @@ async function predict() {
         NEUTRAL_CLASS
     ) {
 
-        stableFrames =
-            0;
+        stableFrames = 0;
 
-
-        lastDetectedClass =
-            null;
+        lastDetectedClass = null;
 
 
         if (
             waitingForNeutral
         ) {
 
-            waitingForNeutral =
-                false;
+            waitingForNeutral = false;
 
 
             battleText.textContent =
@@ -527,10 +503,13 @@ async function predict() {
     }
 
 
+    // ========================================
+    // WAIT FOR NEUTRAL
+    // ========================================
+
     if (
         waitingForNeutral
     ) {
-
         return;
     }
 
@@ -554,8 +533,7 @@ async function predict() {
             className;
 
 
-        stableFrames =
-            1;
+        stableFrames = 1;
 
     }
 
@@ -565,17 +543,13 @@ async function predict() {
         <
         REQUIRED_STABLE_FRAMES
     ) {
-
         return;
     }
 
 
-    stableFrames =
-        0;
+    stableFrames = 0;
 
-
-    lastDetectedClass =
-        null;
+    lastDetectedClass = null;
 
 
     checkGesture(
@@ -599,7 +573,6 @@ function checkGesture(
         >=
         currentSequence.length
     ) {
-
         return;
     }
 
@@ -620,7 +593,7 @@ function checkGesture(
         requiredGesture.className
     ) {
 
-        // Один правильный жест = +1 COMBO.
+        // Каждый правильный жест = +1 COMBO
 
         comboCount++;
 
@@ -636,8 +609,7 @@ function checkGesture(
         currentGestureIndex++;
 
 
-        waitingForNeutral =
-            true;
+        waitingForNeutral = true;
 
 
         battleText.textContent =
@@ -648,7 +620,7 @@ function checkGesture(
         renderSequence();
 
 
-        // Закончили весь ряд.
+        // Полностью закончили ряд
 
         if (
             currentGestureIndex
@@ -669,10 +641,9 @@ function checkGesture(
 
     else {
 
-        // Ошибка полностью сбрасывает streak.
+        // Ошибка = COMBO обратно на 0
 
-        comboCount =
-            0;
+        comboCount = 0;
 
 
         updateCombo();
@@ -689,12 +660,11 @@ function checkGesture(
             + ".";
 
 
-        // Элемент НЕ переключается.
-        // После Neutral игрок снова
-        // пробует тот же жест.
+        // Текущий элемент не меняется.
+        // Нужно сделать Neutral,
+        // а потом попробовать его снова.
 
-        waitingForNeutral =
-            true;
+        waitingForNeutral = true;
 
     }
 
@@ -702,7 +672,7 @@ function checkGesture(
 
 
 // ============================================
-// COMBO
+// UPDATE COMBO
 // ============================================
 
 function updateCombo() {
@@ -715,7 +685,7 @@ function updateCombo() {
 
 
 // ============================================
-// PERFECT / MISS IMAGE
+// PERFECT / MISS
 // ============================================
 
 function showJudgement(
@@ -778,20 +748,15 @@ function showJudgement(
 
 function createNewSequence() {
 
-    currentSequence =
-        [];
+    currentSequence = [];
 
 
-    currentGestureIndex =
-        0;
+    currentGestureIndex = 0;
 
 
-    stableFrames =
-        0;
+    stableFrames = 0;
 
-
-    lastDetectedClass =
-        null;
+    lastDetectedClass = null;
 
 
     for (
@@ -827,8 +792,7 @@ function createNewSequence() {
 
 function renderSequence() {
 
-    rhythmLine.innerHTML =
-        "";
+    rhythmLine.innerHTML = "";
 
 
     currentSequence.forEach(
@@ -858,6 +822,8 @@ function renderSequence() {
                 gesture.className;
 
 
+            // DONE
+
             if (
                 index
                 <
@@ -875,6 +841,8 @@ function renderSequence() {
             }
 
 
+            // CURRENT
+
             else if (
                 index
                 ===
@@ -891,6 +859,8 @@ function renderSequence() {
 
             }
 
+
+            // FUTURE
 
             else {
 
@@ -969,22 +939,20 @@ function damageBoss(
     damage
 ) {
 
-    bossHP -=
-        damage;
+    bossHP -= damage;
 
 
     if (
         bossHP < 0
     ) {
-
-        bossHP =
-            0;
-
+        bossHP = 0;
     }
 
 
     updateBoss();
 
+
+    // Красная версия босса
 
     boss.src =
         BOSS_HIT_IMAGE;
@@ -1070,7 +1038,6 @@ function startTimer() {
                     ||
                     gameOver
                 ) {
-
                     return;
                 }
 
@@ -1103,6 +1070,7 @@ function resetTimer() {
 
 
     updateTimer();
+
 }
 
 
@@ -1120,15 +1088,13 @@ function updateTimer() {
 
 function timeOut() {
 
-    timeLeft =
-        0;
+    timeLeft = 0;
 
 
     updateTimer();
 
 
-    gameOver =
-        true;
+    gameOver = true;
 
 
     clearInterval(
@@ -1163,8 +1129,7 @@ function timeOut() {
 
 function winGame() {
 
-    gameOver =
-        true;
+    gameOver = true;
 
 
     clearInterval(
@@ -1227,28 +1192,22 @@ function resetGame() {
         MAX_BOSS_HP;
 
 
-    comboCount =
-        0;
+    comboCount = 0;
 
 
-    currentGestureIndex =
-        0;
+    currentGestureIndex = 0;
 
 
-    gameOver =
-        false;
+    gameOver = false;
 
 
-    waitingForNeutral =
-        false;
+    waitingForNeutral = false;
 
 
-    stableFrames =
-        0;
+    stableFrames = 0;
 
 
-    lastDetectedClass =
-        null;
+    lastDetectedClass = null;
 
 
     boss.src =
@@ -1368,9 +1327,12 @@ const tutorialSkip =
     );
 
 
-let tutorialStep =
-    0;
+let tutorialStep = 0;
 
+
+// ============================================
+// SHOW TUTORIAL PAGE
+// ============================================
 
 function showTutorialPage() {
 
@@ -1408,10 +1370,13 @@ function showTutorialPage() {
 }
 
 
+// ============================================
+// OPEN TUTORIAL
+// ============================================
+
 function openTutorial() {
 
-    tutorialStep =
-        0;
+    tutorialStep = 0;
 
 
     tutorialOverlay.classList.remove(
@@ -1424,6 +1389,10 @@ function openTutorial() {
 }
 
 
+// ============================================
+// CLOSE TUTORIAL
+// ============================================
+
 function closeTutorial() {
 
     tutorialOverlay.classList.add(
@@ -1432,6 +1401,10 @@ function closeTutorial() {
 
 }
 
+
+// ============================================
+// TUTORIAL BUTTONS
+// ============================================
 
 tutorialNext.addEventListener(
     "click",
